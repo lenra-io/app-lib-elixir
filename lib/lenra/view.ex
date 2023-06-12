@@ -6,6 +6,7 @@ defmodule Lenra.View do
       @before_compile Lenra.View
       @on_definition Lenra.View
       @views %{}
+      @dirty false
       import Lenra.ViewsHelper
 
       def call(fun, args) do

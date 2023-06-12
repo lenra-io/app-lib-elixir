@@ -7,18 +7,35 @@ defmodule Lenra.MixProject do
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
+      description: description(),
+      package: package(),
       deps: deps()
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
-  def application do
+  defp description() do
+    """
+    The Lenra API and server to create a Lernra app using elixir.
+    This contains :
+    - The API to contact the /app endpoints
+    - Helpers to create the JSON UI
+    - Helpers to configure/start the server
+    """
+  end
+
+  defp package() do
     [
-      # extra_applications: [:logger]
+      # These are the default files included in the package
+      files: ~w(lib .formatter.exs mix.exs README.md LICENSE),
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/lenra-io/app-lib-elixir"}
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
+  def application do
+    []
+  end
+
   defp deps do
     [
       {:plug_cowboy, "~> 2.0"},

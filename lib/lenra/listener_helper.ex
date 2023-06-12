@@ -7,7 +7,7 @@ defmodule Lenra.ListenerHelper do
       end
 
       def unquote(:"#{name}_r")(params \\ []) do
-        %{type: "listener", listener: Lenra.Listener.get_id(__MODULE__, unquote(name))}
+        %{action: Lenra.Listener.get_id(__MODULE__, unquote(name))}
         |> Lenra.Utils.add_all(params, [:props])
       end
     end
@@ -16,8 +16,8 @@ defmodule Lenra.ListenerHelper do
   # Not sure about the macro case. defonenvstart ? def_on_env_start ?
   defmacro def_on_env_start(args \\ quote(do: _), do: block) do
     quote do
-      @listener true
-      def onEnvStart(unquote(args)) do
+      @listener "onEnvStart"
+      def on_env_start(unquote(args)) do
         unquote(block)
       end
     end
@@ -25,8 +25,8 @@ defmodule Lenra.ListenerHelper do
 
   defmacro def_on_session_start(args \\ quote(do: _), do: block) do
     quote do
-      @listener true
-      def onSessionStart(unquote(args)) do
+      @listener "onSessionStart"
+      def on_session_start(unquote(args)) do
         unquote(block)
       end
     end
@@ -34,8 +34,8 @@ defmodule Lenra.ListenerHelper do
 
   defmacro def_on_user_first_join(args \\ quote(do: _), do: block) do
     quote do
-      @listener true
-      def onUserFirstJoin(unquote(args)) do
+      @listener "onUserFirstJoin"
+      def on_user_first_join(unquote(args)) do
         unquote(block)
       end
     end

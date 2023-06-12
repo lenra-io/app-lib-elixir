@@ -28,13 +28,28 @@ defmodule Lenra.Listener do
     id = get_id(env.module, fun_name)
     listeners = Module.get_attribute(env.module, :listeners)
 
-    with true <- Module.delete_attribute(env.module, :listener),
-         :ok <- Lenra.Utils.AnnotationUtils.check_exists(listeners, id, "listener") do
+    case Module.delete_attribute(env.module, :listener) do
+      false ->
+        :ok
+
+      nil ->
+        :ok
+
+      true ->
+        check_and_save(listeners, id, env.module, fun_name)
+
+      value when is_bitstring(value) ->
+        check_and_save(listeners, value, env.module, fun_name)
+    end
+  end
+
+  defp check_and_save(listeners, id, module, fun_name) do
+    with :ok <- Lenra.Utils.AnnotationUtils.check_exists(listeners, id, "listener") do
       Module.put_attribute(
-        env.module,
+        module,
         :listeners,
         Map.put(listeners, id, %{
-          mod: env.module,
+          mod: module,
           fun: fun_name
         })
       )
@@ -42,6 +57,6 @@ defmodule Lenra.Listener do
   end
 
   def get_id(mod_name, fun_name) do
-    "#{mod_name}.#{fun_name}"
+    "#{mod_name}.#{fun_name}" |> String.replace(".", "_")
   end
 end
