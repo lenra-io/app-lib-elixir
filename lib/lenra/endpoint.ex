@@ -25,17 +25,17 @@ defmodule Lenra.Endpoint do
     Logger.debug("params : #{inspect(conn.body_params)}")
 
     case conn.body_params do
-      %{
-        "action" => action,
-        "props" => props,
-        "event" => event,
-        "api" => api
-      } ->
+      %{"action" => action} = params ->
         Logger.info("Call listener #{action}")
+        props = Map.get(params, "props", %{})
+        event = Map.get(params, "event", %{})
+        api = Map.get(params, "api", %{})
         Lenra.Listener.call(conn, action, %{props: props, event: event, api: api})
 
-      %{"view" => name, "props" => props, "data" => data} ->
+      %{"view" => name} = params ->
         Logger.info("Call view #{name}")
+        props = Map.get(params, "props", %{})
+        data = Map.get(params, "data", %{})
         Lenra.View.call(conn, name, %{props: props, data: data})
 
       %{"resource" => resource} ->
