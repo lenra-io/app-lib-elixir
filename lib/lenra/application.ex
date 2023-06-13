@@ -16,7 +16,9 @@ defmodule Lenra.Application do
 
       @port 3000
       def init(_opts) do
+        Logger.debug("Loading Views...")
         Lenra.View.load(unquote(otp_app))
+        Logger.debug("Loading Listeners...")
         Lenra.Listener.load(unquote(otp_app))
 
         children = [
@@ -25,8 +27,7 @@ defmodule Lenra.Application do
             scheme: :http,
             plug: {
               Lenra.Endpoint,
-              otp_app: unquote(otp_app),
-              manifest_mod: unquote(manifest_mod)
+              otp_app: unquote(otp_app), manifest_mod: unquote(manifest_mod)
               # resources_mod: unquote(resources_mod),
               # listeners_mod: unquote(listeners_mod),
               # views_mod: unquote(views_mod)
@@ -43,7 +44,7 @@ defmodule Lenra.Application do
         ]
 
         res = Supervisor.init(children, strategy: :one_for_one)
-        Logger.info("Application is started on port #{@port}")
+        Logger.info("Application is started")
         res
       end
     end

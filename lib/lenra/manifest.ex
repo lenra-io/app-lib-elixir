@@ -1,6 +1,8 @@
 defmodule Lenra.Manifest do
   defmacro __using__(_opts) do
     quote do
+      require Logger
+
       @behaviour Lenra.Manifest
       @spec call(Plug.Conn.t()) :: Plug.Conn.t()
       def call(conn) do
@@ -12,7 +14,7 @@ defmodule Lenra.Manifest do
           }
         }
 
-        Plug.Conn.send_resp(conn, 200, Jason.encode!(res))
+        Lenra.Utils.send_resp(conn, res)
       end
 
       def lenra_routes do

@@ -13,6 +13,8 @@ defmodule Lenra.Utils.AnnotationUtils do
     binding_fun = Keyword.get(opts, :binding_fun)
 
     quote do
+      require Logger
+
       def load(otp_app) do
         res =
           :application.get_key(otp_app, :modules)
@@ -26,6 +28,7 @@ defmodule Lenra.Utils.AnnotationUtils do
             Map.merge(merged_bindings, module_bindings)
           end)
 
+        Logger.debug("loaded : #{inspect(res)}")
         :persistent_term.put(__MODULE__, res)
       end
 
@@ -40,6 +43,7 @@ defmodule Lenra.Utils.AnnotationUtils do
       def call(conn, id, args) do
         case get(id) do
           nil ->
+            Logger.error("Unknown element #{id}")
             Lenra.Utils.send_resp(conn, {:error, "Unknown element #{id}"})
 
           elem ->

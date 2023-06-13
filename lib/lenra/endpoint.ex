@@ -22,6 +22,8 @@ defmodule Lenra.Endpoint do
     # listeners_mod = Keyword.fetch!(conn.assigns.opts, :listeners_mod)
     # views_mod = Keyword.fetch!(conn.assigns.opts, :views_mod)
 
+    Logger.debug("params : #{inspect(conn.body_params)}")
+
     case conn.body_params do
       %{
         "action" => action,
