@@ -1,5 +1,5 @@
 defmodule Lenra.ViewsHelper do
-  defmacro defview(args \\ quote(do: _), do: block) do
+  defmacro defview(args \\ nil, do: block) do
     if Module.get_attribute(__CALLER__.module, :dirty),
       do:
         raise("""
@@ -25,20 +25,43 @@ defmodule Lenra.ViewsHelper do
 
     Module.put_attribute(__CALLER__.module, :dirty, true)
 
-    quote do
-      @view true
-      def c(unquote(args)) do
-        unquote(block)
+    IO.inspect(args)
+
+    n_fun =
+      case args do
+        {:_, _, nil} ->
+          quote do
+            @view true
+            def n(_) do
+              n()
+            end
+
+            def n() do
+              unquote(block)
+            end
+          end
+
+        _ ->
+          quote do
+            @view true
+            def n(unquote(args)) do
+              unquote(block)
+            end
+          end
       end
 
-      def r(params \\ []) do
-        %{type: "view", name: Lenra.View.get_id(__MODULE__)}
-        |> Lenra.Utils.add_all(params, [:coll, :query, :props])
+    rest =
+      quote do
+        def r(params \\ []) do
+          %{type: "view", name: Lenra.View.get_id(__MODULE__)}
+          |> Lenra.Utils.add_all(params, [:coll, :query, :props])
+        end
+
+        def name do
+          Lenra.View.get_id(__MODULE__)
+        end
       end
 
-      def name do
-        Lenra.View.get_id(__MODULE__)
-      end
-    end
+    [n_fun, rest]
   end
 end

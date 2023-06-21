@@ -54,8 +54,8 @@ defmodule Lenra.Utils do
   end
 
   def send_resp(conn, {:ok, res}) when is_list(res) or is_map(res) or is_struct(res) do
-    send_resp(conn, {:ok, Jason.encode!(res)})
+    send_resp(conn, {:ok, Lenra.Components.to_json!(res)})
   end
 
-  def send_resp(conn, res), do: send_resp(conn, {:ok, Jason.encode!(res)})
+  def send_resp(conn, res), do: send_resp(conn, {:ok, Lenra.Components.to_json!(res)})
 end

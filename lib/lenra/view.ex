@@ -8,6 +8,7 @@ defmodule Lenra.View do
       @views %{}
       @dirty false
       import Lenra.ViewsHelper
+      use Lenra.Components
 
       def call(fun, args) do
         apply(__MODULE__, fun, [args])

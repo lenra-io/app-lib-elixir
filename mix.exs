@@ -4,7 +4,7 @@ defmodule Lenra.MixProject do
   def project do
     [
       app: :lenra_api,
-      version: "0.2.1",
+      version: "0.2.2",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       description: description(),
@@ -40,7 +40,8 @@ defmodule Lenra.MixProject do
     [
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.4"},
-      {:finch, "~> 0.13.0"}
+      {:finch, "~> 0.13.0"},
+      {:lenra_components, "~> 0.1.0"}
     ]
   end
 end
